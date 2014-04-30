@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import datetime, json, os
+import datetime, json, os, pprint
 import flask
 from clusters_api.config import settings
 from clusters_api.utils import logger_setup, grabber_handler
@@ -11,10 +11,11 @@ app = flask.Flask(__name__)
 log = logger_setup.setup_logger()
 
 
-@app.route( u'/clusters_api', methods=['GET'] )
+@app.route( u'/data', methods=['GET'] )
 def return_json():
     """ Returns already-produced json.
         TODO: build out. """
+    log.debug( u'- in clusters_app.return_json(); test log entry' )
     jstring = get-the-file
     jdict = json.loads( jstring )
     return_dict = {
@@ -35,7 +36,7 @@ def search():
         return flask.abort( 403 )
     grabber = grabber_handler.Grabber( log )
     grabber.update_data()  # this is the work; nothing really needs to be returned. I could just redirect to a clusters_api() call for the produced data.
-    return flask.some-redirect-function-call( ./clusters_api )
+    return flask.redirect( u'./clusters_api', code=303 )
 
 
 

@@ -3,11 +3,14 @@
 import json, os
 
 
-# coming
-SOME_SETTING = unicode( os.environ.get(u'clusters__SOME_SETTING') )
+# auth
+LEGIT_IPS = json.loads( unicode(os.environ.get(u'clusters__LEGIT_IPS')) )
 
 # file-logger
 LOG_DIR = unicode( os.environ.get(u'clusters__LOG_DIR') )
 LOG_LEVEL = unicode( os.environ.get(u'clusters__LOG_LEVEL') )
+
+# grabber
+SOURCE_URL = unicode( os.environ.get(u'clusters__SOURCE_URL') )
 
 # end

@@ -1,0 +1,7 @@
+##
+# Add this file to your environment's site-packages folder.
+# Update the path to the folder _enclosing_ the clusters_api folder.
+# This will allow imports like "from clusters_api import..." to work as expected when run by cron (not needed for web-access).
+##
+
+/path/to/enclosing_folder

@@ -41,8 +41,7 @@ class Parser(object):
             u'Rock 2nd Floor': u'rock-level-2-main',
             u'Rock Grad': u'rock-level-2-grad',
             u'Friedman': u'scili-friedman',
-            u'SciLi Mezz': u'scili-mezzanine'
-            }
+            u'SciLi Mezz': u'scili-mezzanine' }
 
     def parse_cluster_html( self, html ):
         """ Takes source html.
@@ -120,13 +119,12 @@ if __name__ == u'__main__':
     try:
         log = logger_setup.setup_logger()
     except Exception as e:
-        print u'- in grabber_handler.__main__; exception setting up logger, %s' % e
+        print u'- in grabber_handler.__main__; exception setting up logger, %s' % unicode(repr(e))
         sys.exit()
     try:
-
         grabber = Grabber( log )
         grabber.update_data()
     except Exception as e:
-        message = u'- in grabber_handler.__main__; exception, %s' % e
+        message = u'- in grabber_handler.__main__; exception updating data, %s' % unicode(repr(e))
         print message
         log.error( message )

@@ -11,11 +11,13 @@ app = flask.Flask(__name__)
 log = logger_setup.setup_logger()
 
 
-@app.route( u'/data', methods=['GET'] )
+@app.route( u'/summary_availability_api_v2/lib-all/', methods=['GET'] )
+@app.route( u'/data/', methods=['GET'] )
 def return_json():
     """ Returns already-produced json.
         TODO: build out. """
     log.debug( u'- in clusters_app.return_json(); test log entry' )
+    return flask.jsonify( {u'coming': u'soon'} )
     jstring = get-the-file
     jdict = json.loads( jstring )
     return_dict = {

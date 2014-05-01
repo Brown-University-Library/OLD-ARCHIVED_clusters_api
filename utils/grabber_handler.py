@@ -2,10 +2,11 @@
 
 """ Grabs html, parses, and saves json to disk. """
 
-import datetime, json, pprint
+import datetime, json, pprint, sys
 import requests
 from bs4 import BeautifulSoup
 from clusters_api.config import settings
+from clusters_api.utils import logger_setup
 
 
 class Grabber(object):
@@ -20,7 +21,11 @@ class Grabber(object):
         """ Accesses source html, parses it, and saves json to disk. """
         html = self._grab_html()
         clusters_dict = self.parser.parse_cluster_html( html )
-        jstring = json.dumps( clusters_dict, sort_keys=True, indent=2 )
+        save_dict = {
+            u'datetime_updated': unicode( datetime.datetime.now() ),
+            u'counts': clusters_dict
+            }
+        jstring = json.dumps( save_dict, sort_keys=True, indent=2 )
         with open( settings.JSON_FILE_PATH, u'w' ) as f:
             f.write( jstring )
         return
@@ -96,7 +101,7 @@ class Parser(object):
                i += 1
             except:
               pass
-      return count_dict
+        return count_dict
 
     def _tweak_counts( self, data_dict ):
         """ Helper. Updates count_dict labels to api-compatible ones; adds useful 'calculated_available' data.
@@ -113,24 +118,22 @@ class Parser(object):
             updated_data_dict[cluster_name] = updated_count_dict
         return updated_data_dict
 
-    # def parse_cluster_html( self, html ):
-    #     """ Takes source html.
-    #         Parses out cluster data.
-    #         Returns dict.
-    #         Note: this used the mobile site, which doesn't directly contain all the info needed. """
-    #     soup = BeautifulSoup( html, from_encoding=u'utf-8' )
-    #     ul_element = soup.find( id=u'pubStats' )
-    #     a_elements = ul_element.find_all( u'a' )
-    #     data_dict = {}
-    #     for a_element in a_elements:
-    #         all_text = a_element.text
-    #         count_text = a_element.find( u'span' ).text
-    #         source_cluster_name = all_text[ 0:all_text.find(count_text) ]
-    #         self.log.debug( u'- in grabber_handler.Parser.parse_cluster_html(); source_cluster_name, `%s`' % source_cluster_name )
-    #         if source_cluster_name in self.cluster_name_mapper.keys():
-    #             data_dict_key = self.cluster_name_mapper[ source_cluster_name ]
-    #             count_parts = count_text.split( u'/' )
-    #             ( calculated_available, total ) = ( count_parts[0], count_parts[1] )
-    #             data_dict[ data_dict_key ] = { u'available': calculated_available, u'total': total }
-    #     self.log.debug( u'- in grabber_handler.Parser.parse_cluster_html(); data_dict, `%s`' % pprint.pformat(data_dict) )
-    #     return data_dict
+
+
+
+if __name__ == u'__main__':
+    """ Assumes env is activated.
+        Called by cron script. """
+    try:
+        log = logger_setup.setup_logger()
+    except Exception as e:
+        print u'- in grabber_handler.__main__; exception setting up logger, %s' % e
+        sys.exit()
+    try:
+
+        grabber = Grabber( log )
+        grabber.update_data()
+    except Exception as e:
+        message = u'- in grabber_handler.__main__; exception, %s' % e
+        print message
+        log.error( message )

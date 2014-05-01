@@ -19,23 +19,16 @@ class Grabber(object):
 
     def update_data( self ):
         """ Accesses source html, parses it, and saves json to disk. """
-        html = self._grab_html()
+        r = requests.get( settings.SOURCE_URL )
+        html = r.content.decode( u'utf-8' )
         clusters_dict = self.parser.parse_cluster_html( html )
         save_dict = {
             u'datetime_updated': unicode( datetime.datetime.now() ),
-            u'counts': clusters_dict
-            }
+            u'counts': clusters_dict }
         jstring = json.dumps( save_dict, sort_keys=True, indent=2 )
         with open( settings.JSON_FILE_PATH, u'w' ) as f:
             f.write( jstring )
         return
-
-    def _grab_html( self ):
-        """ Helper function.
-            Grabs html and returns it. """
-        r = requests.get( settings.SOURCE_URL )
-        html = r.content.decode( u'utf-8' )
-        return html
 
 
 class Parser(object):

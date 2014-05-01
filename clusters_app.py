@@ -42,8 +42,8 @@ def search():
 
 
 
-if __name__ == '__main__':
-    if os.getenv('DEVBOX') == 'true':
-        app.run( host='0.0.0.0', debug=True )
+if __name__ == u'__main__':
+    if os.getenv( u'DEVBOX' ) == u'true':
+        app.run( host=u'0.0.0.0', debug=True )
     else:
         app.run()

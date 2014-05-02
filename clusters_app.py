@@ -15,6 +15,7 @@ log = logger_setup.setup_logger()
 @app.route( u'/data/', methods=['GET'] )
 def return_json():
     """ Returns already-produced json. """
+    log.debug( u'- in clusters_app.return_json(); starting' )
     with open( settings.JSON_FILE_PATH ) as f:
         data_dict = json.loads( f.read() )
     return_dict = {

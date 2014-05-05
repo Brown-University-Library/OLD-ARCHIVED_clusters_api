@@ -6,16 +6,22 @@ import datetime, json, pprint, sys
 import requests
 from bs4 import BeautifulSoup
 from clusters_api.config import settings
-from clusters_api.utils import logger_setup
+# from clusters_api.utils import logger_setup
 
 
 class Grabber(object):
+    """ TODO: once server acls are set up, re-enable logging. """
 
-    def __init__( self, log ):
+    def __init__( self ):
         """ Sets up basics. """
-        self.log = log
         self.parser = None
-        self.parser = Parser( self.log )
+        self.parser = Parser()
+
+    # def __init__( self, log ):
+    #     """ Sets up basics. """
+    #     self.log = log
+    #     self.parser = None
+    #     self.parser = Parser( self.log )
 
     def update_data( self ):
         """ Accesses source html, parses it, and saves json to disk. """
@@ -33,15 +39,24 @@ class Grabber(object):
 
 class Parser(object):
 
-    def __init__( self, log ):
+    def __init__( self ):
        """ Sets up basics. """
-       self.log = log
        self.cluster_name_mapper = {  # source-html-name: api-name
             u'Rock 1st Floor': u'rock-level-1',
             u'Rock 2nd Floor': u'rock-level-2-main',
             u'Rock Grad': u'rock-level-2-grad',
             u'Friedman': u'scili-friedman',
             u'SciLi Mezz': u'scili-mezzanine' }
+
+    # def __init__( self, log ):
+    #    """ Sets up basics. """
+    #    self.log = log
+    #    self.cluster_name_mapper = {  # source-html-name: api-name
+    #         u'Rock 1st Floor': u'rock-level-1',
+    #         u'Rock 2nd Floor': u'rock-level-2-main',
+    #         u'Rock Grad': u'rock-level-2-grad',
+    #         u'Friedman': u'scili-friedman',
+    #         u'SciLi Mezz': u'scili-mezzanine' }
 
     def parse_cluster_html( self, html ):
         """ Takes source html.
@@ -112,19 +127,29 @@ class Parser(object):
 
 
 
-
 if __name__ == u'__main__':
     """ Assumes env is activated.
-        Called by cron script. """
-    try:
-        log = logger_setup.setup_logger()
-    except Exception as e:
-        print u'- in grabber_handler.__main__; exception setting up logger, %s' % unicode(repr(e))
-        sys.exit()
+        Called by cron script.
+        TODO: once server acls are set up, re-enable logging. """
     try:
         grabber = Grabber( log )
         grabber.update_data()
     except Exception as e:
         message = u'- in grabber_handler.__main__; exception updating data, %s' % unicode(repr(e))
         print message
-        log.error( message )
+
+# if __name__ == u'__main__':
+#     """ Assumes env is activated.
+#         Called by cron script. """
+#     try:
+#         log = logger_setup.setup_logger()
+#     except Exception as e:
+#         print u'- in grabber_handler.__main__; exception setting up logger, %s' % unicode(repr(e))
+#         sys.exit()
+#     try:
+#         grabber = Grabber( log )
+#         grabber.update_data()
+#     except Exception as e:
+#         message = u'- in grabber_handler.__main__; exception updating data, %s' % unicode(repr(e))
+#         print message
+#         log.error( message )

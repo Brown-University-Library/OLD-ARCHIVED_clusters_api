@@ -30,12 +30,15 @@ def return_json():
 
 @app.route( u'/update_data', methods=['POST'] )
 def search():
-    """ Builds json. """
+    """ Builds json.
+        Note: normally grabber.update_data() is run from cron-script; this is just for testing.
+        TODO: once server acls are set up, re-enable logging. """
     client_ip = flask.request.remote_addr
     if not client_ip in settings.LEGIT_IPS.keys():
         log.debug( u'- in clusters_app.search_new_request(); client_ip `%s` not in LEGIT_IPS; returning forbidden' % client_ip )
         return flask.abort( 403 )
-    grabber = grabber_handler.Grabber( log )
+    grabber = grabber_handler.Grabber()
+    # grabber = grabber_handler.Grabber( log )
     grabber.update_data()  # nothing really needs to be returned, but i'll redirect to the get-api for easy debugging
     redirect_url = flask.url_for( u'return_json' )
     return flask.redirect( redirect_url, code=303 )

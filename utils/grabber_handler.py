@@ -132,7 +132,7 @@ if __name__ == u'__main__':
         Called by cron script.
         TODO: once server acls are set up, re-enable logging. """
     try:
-        grabber = Grabber( log )
+        grabber = Grabber()
         grabber.update_data()
     except Exception as e:
         message = u'- in grabber_handler.__main__; exception updating data, %s' % unicode(repr(e))

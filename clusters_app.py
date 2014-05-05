@@ -11,8 +11,9 @@ app = flask.Flask(__name__)
 log = logger_setup.setup_logger()
 
 
-@app.route( u'/summary_availability_api_v2/lib-all/', methods=['GET'] )
-@app.route( u'/data/', methods=['GET'] )
+# @app.route( u'/summary_availability_api_v2/lib-all/', methods=['GET'] )  # /services/clusters/summary_availability_api_v2/lib-all/
+@app.route( u'/lib-all/', methods=['GET'] )  # /services/clusters/summary_availability_api_v2/lib-all/
+@app.route( u'/data/', methods=['GET'] )  # /clusters_api/data/
 def return_json():
     """ Returns already-produced json. """
     log.debug( u'- in clusters_app.return_json(); starting' )
@@ -28,7 +29,7 @@ def return_json():
     return flask.jsonify( return_dict )
 
 
-@app.route( u'/update_data', methods=['POST'] )
+@app.route( u'/update_data', methods=['POST'] )  # /clusters_api/update_data/
 def search():
     """ Builds json.
         Note: normally grabber.update_data() is run from cron-script; this is just for testing.

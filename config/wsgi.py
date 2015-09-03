@@ -17,10 +17,10 @@ import os, pprint, sys
 current_directory = os.path.dirname( os.path.abspath(__file__) )
 
 ## vars
-ACTIVATE_FILE = os.path.abspath( u'%s/../../env_clusters/bin/activate_this.py' % current_directory )
-PROJECT_DIR = os.path.abspath( u'%s/../../clusters_api' % current_directory )
-PROJECT_ENCLOSING_DIR = os.path.abspath( u'%s/../..' % current_directory )
-SITE_PACKAGES_DIR = os.path.abspath( u'%s/../../env_clusters/lib/python2.6/site-packages' % current_directory )
+ACTIVATE_FILE = os.path.abspath( '%s/../../env_clusters/bin/activate_this.py' % current_directory )
+PROJECT_DIR = os.path.abspath( '%s/../../clusters_api' % current_directory )
+PROJECT_ENCLOSING_DIR = os.path.abspath( '%s/../..' % current_directory )
+SITE_PACKAGES_DIR = os.path.abspath( '%s/../../env_clusters/lib/python2.6/site-packages' % current_directory )
 
 ## virtualenv
 execfile( ACTIVATE_FILE, dict(__file__=ACTIVATE_FILE) )  # file loads environmental variables

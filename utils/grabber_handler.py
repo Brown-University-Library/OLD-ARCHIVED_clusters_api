@@ -2,6 +2,7 @@
 
 """ Grabs html, parses, and saves json to disk. """
 
+from __future__ import unicode_literals
 import datetime, json, pprint, sys
 import requests
 from bs4 import BeautifulSoup

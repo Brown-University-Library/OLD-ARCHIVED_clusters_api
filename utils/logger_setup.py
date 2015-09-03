@@ -2,6 +2,7 @@
 
 """ Handles log setup. """
 
+from __future__ import unicode_literals
 import logging, os, pprint
 import logging.handlers
 from clusters_api.config import settings

@@ -9,6 +9,7 @@
         env_clusters/
      """
 
+from __future__ import unicode_literals
 import os, pprint, sys
 
 

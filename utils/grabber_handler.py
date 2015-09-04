@@ -2,6 +2,7 @@
 
 """ Grabs html, parses, and saves json to disk. """
 
+from __future__ import unicode_literals
 import datetime, json, pprint, sys
 import requests
 from bs4 import BeautifulSoup
@@ -26,13 +27,13 @@ class Grabber(object):
     def update_data( self ):
         """ Accesses source html, parses it, and saves json to disk. """
         r = requests.get( settings.SOURCE_URL )
-        html = r.content.decode( u'utf-8' )
+        html = r.content.decode( 'utf-8' )
         clusters_dict = self.parser.parse_cluster_html( html )
         save_dict = {
-            u'datetime_updated': unicode( datetime.datetime.now() ),
-            u'counts': clusters_dict }
+            'datetime_updated': unicode( datetime.datetime.now() ),
+            'counts': clusters_dict }
         jstring = json.dumps( save_dict, sort_keys=True, indent=2 )
-        with open( settings.JSON_FILE_PATH, u'w' ) as f:
+        with open( settings.JSON_FILE_PATH, 'w' ) as f:
             f.write( jstring )
         return
 
@@ -42,21 +43,21 @@ class Parser(object):
     def __init__( self ):
        """ Sets up basics. """
        self.cluster_name_mapper = {  # source-html-name: api-name
-            u'Rock 1st Floor': u'rock-level-1',
-            u'Rock 2nd Floor': u'rock-level-2-main',
-            u'Rock Grad': u'rock-level-2-grad',
-            u'Friedman': u'scili-friedman',
-            u'SciLi Mezz': u'scili-mezzanine' }
+            'Rock 1st Floor': 'rock-level-1',
+            'Rock 2nd Floor': 'rock-level-2-main',
+            'Rock Grad': 'rock-level-2-grad',
+            'Friedman': 'scili-friedman',
+            'SciLi Mezz': 'scili-mezzanine' }
 
     # def __init__( self, log ):
     #    """ Sets up basics. """
     #    self.log = log
     #    self.cluster_name_mapper = {  # source-html-name: api-name
-    #         u'Rock 1st Floor': u'rock-level-1',
-    #         u'Rock 2nd Floor': u'rock-level-2-main',
-    #         u'Rock Grad': u'rock-level-2-grad',
-    #         u'Friedman': u'scili-friedman',
-    #         u'SciLi Mezz': u'scili-mezzanine' }
+    #         'Rock 1st Floor': 'rock-level-1',
+    #         'Rock 2nd Floor': 'rock-level-2-main',
+    #         'Rock Grad': 'rock-level-2-grad',
+    #         'Friedman': 'scili-friedman',
+    #         'SciLi Mezz': 'scili-mezzanine' }
 
     def parse_cluster_html( self, html ):
         """ Takes source html.
@@ -69,7 +70,7 @@ class Parser(object):
           title = self._extract_title( row )
           if title in self.cluster_name_mapper.keys():
             count_dict = self._extract_counts( row )
-            data_dict[ self.cluster_name_mapper[title] ] = count_dict  # takes, eg, title u'Rock 1st Floor' and stores key as u'rock-level-1'
+            data_dict[ self.cluster_name_mapper[title] ] = count_dict  # takes, eg, title 'Rock 1st Floor' and stores key as 'rock-level-1'
         api_data_dict = self._tweak_counts( data_dict )
         return api_data_dict
 
@@ -77,10 +78,10 @@ class Parser(object):
         """ Helper. Grabs cluster table-row objects from html.
             Returns list of BeautifulSoup dom objects. """
         soup = BeautifulSoup( html )
-        table_rows = soup.findAll( u'tr' )
+        table_rows = soup.findAll( 'tr' )
         relevant_tablerows = []
         for row in table_rows:
-            table_cells = row.findAll( u'td' )
+            table_cells = row.findAll( 'td' )
             if len( table_cells ) == 9:
                 relevant_tablerows.append( row )
         return relevant_tablerows
@@ -88,8 +89,8 @@ class Parser(object):
     def _extract_title( self, row ):
         """ Helper. Grabs title from table-row object.
             Returns unicode-string or None. """
-        title_cell = row.findAll( u'td' )[0]
-        a_link = title_cell.findAll( u'a' )
+        title_cell = row.findAll( 'td' )[0]
+        a_link = title_cell.findAll( 'a' )
         title = None
         if len( a_link ) > 0:  # goal: '''[<a href="javascript:loadPieChart(11)">Rock 1st Floor</a>]'''
             title = unicode( a_link[0].string )
@@ -98,8 +99,8 @@ class Parser(object):
     def _extract_counts( self, row ):
         """ Helper. Grabs count info from table-row object.
             Returns dict; counts are integers. """
-        table_cells = row.findAll( u'td' )
-        rawdata_count_names = [ u'In Use', u'Available Stations', u'Unavailable Stations', u'Offline Stations', u'Total Stations' ]  # don't re-order; this is order in rawdata
+        table_cells = row.findAll( 'td' )
+        rawdata_count_names = [ 'In Use', 'Available Stations', 'Unavailable Stations', 'Offline Stations', 'Total Stations' ]  # don't re-order; this is order in rawdata
         count_dict = {}; i = 0
         for cell in table_cells:
             try:
@@ -117,17 +118,17 @@ class Parser(object):
         for key, value in data_dict.items():
             cluster_name = key; count_dict = value
             updated_count_dict = {
-                u'available': count_dict[u'Available Stations'],
-                u'calculated_available': count_dict[u'Available Stations'] + count_dict[u'Offline Stations'],
-                u'in_use': count_dict[u'In Use'],
-                u'offline': count_dict[u'Offline Stations'],
-                u'total': count_dict[u'Total Stations'] }
+                'available': count_dict['Available Stations'],
+                'calculated_available': count_dict['Available Stations'] + count_dict['Offline Stations'],
+                'in_use': count_dict['In Use'],
+                'offline': count_dict['Offline Stations'],
+                'total': count_dict['Total Stations'] }
             updated_data_dict[cluster_name] = updated_count_dict
         return updated_data_dict
 
 
 
-if __name__ == u'__main__':
+if __name__ == '__main__':
     """ Assumes env is activated.
         Called by cron script.
         TODO: once server acls are set up, re-enable logging. """
@@ -135,21 +136,21 @@ if __name__ == u'__main__':
         grabber = Grabber()
         grabber.update_data()
     except Exception as e:
-        message = u'- in grabber_handler.__main__; exception updating data, %s' % unicode(repr(e))
+        message = '- in grabber_handler.__main__; exception updating data, %s' % unicode(repr(e))
         print message
 
-# if __name__ == u'__main__':
+# if __name__ == '__main__':
 #     """ Assumes env is activated.
 #         Called by cron script. """
 #     try:
 #         log = logger_setup.setup_logger()
 #     except Exception as e:
-#         print u'- in grabber_handler.__main__; exception setting up logger, %s' % unicode(repr(e))
+#         print '- in grabber_handler.__main__; exception setting up logger, %s' % unicode(repr(e))
 #         sys.exit()
 #     try:
 #         grabber = Grabber( log )
 #         grabber.update_data()
 #     except Exception as e:
-#         message = u'- in grabber_handler.__main__; exception updating data, %s' % unicode(repr(e))
+#         message = '- in grabber_handler.__main__; exception updating data, %s' % unicode(repr(e))
 #         print message
 #         log.error( message )

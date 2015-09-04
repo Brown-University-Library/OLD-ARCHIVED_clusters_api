@@ -2,6 +2,7 @@
 
 """ Handles log setup. """
 
+from __future__ import unicode_literals
 import logging, os, pprint
 import logging.handlers
 from clusters_api.config import settings
@@ -19,10 +20,10 @@ class GroupWriteRotatingFileHandler( logging.handlers.RotatingFileHandler ):
 
 def setup_logger():
     """ Returns a logger to write to a file. """
-    filename = u'%s/clusters_api.log' % settings.LOG_DIR
-    formatter = logging.Formatter( u'[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s' )
-    logger = logging.getLogger( u'clusters_api' )
-    level_dict = { u'debug': logging.DEBUG, u'info':logging.INFO }
+    filename = '%s/clusters_api.log' % settings.LOG_DIR
+    formatter = logging.Formatter( '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s' )
+    logger = logging.getLogger( 'clusters_api' )
+    level_dict = { 'debug': logging.DEBUG, 'info':logging.INFO }
     logger.setLevel( level_dict[settings.LOG_LEVEL] )
     file_handler = GroupWriteRotatingFileHandler( filename, maxBytes=(5*1024*1024), backupCount=1 )
     # file_handler = logging.handlers.RotatingFileHandler( filename, maxBytes=(5*1024*1024), backupCount=1 )

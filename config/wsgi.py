@@ -30,4 +30,11 @@ for entry in [PROJECT_DIR, PROJECT_ENCLOSING_DIR, SITE_PACKAGES_DIR]:
  if entry not in sys.path:
    sys.path.append( entry )
 
+## load up env vars
+SETTINGS_FILE = os.environ['clusters__SETTINGS_PATH']  # set in activate_this.py, and activated above
+import shellvars
+var_dct = shellvars.get_vars( SETTINGS_FILE )
+for ( key, val ) in var_dct.items():
+    os.environ[key] = val
+
 from clusters_api.clusters_app import app as application
